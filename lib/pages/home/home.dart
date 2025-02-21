@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:authentication/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,199 +12,139 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<Map<String, String>> _tekaTeki = [
-    {
-      "question": "Apa yang selalu naik tapi tidak pernah turun?",
-      "answer": "Usia"
-    },
-    {
-      "question": "Saya punya kunci, tapi tidak bisa membuka pintu. Apa saya?",
-      "answer": "Piano"
-    },
-    {
-      "question": "Semakin banyak diambil, semakin besar saya. Apa saya?",
-      "answer": "Lubang"
-    },
-    {
-      "question":
-          "Saya punya tangan tapi tidak bisa bertepuk tangan. Apa saya?",
-      "answer": "Jam"
-    },
-    {
-      "question":
-          "Apa yang lebih ringan dari bulu tapi tidak bisa dipegang lama?",
-      "answer": "Napas"
-    },
+  final List<String> _faktaUnik = [
+    "Jantung paus biru sebesar mobil kecil dan bisa didengar dari 3 km jauhnya.",
+    "Ada lebih banyak bintang di alam semesta daripada butiran pasir di semua pantai di Bumi.",
+    "Air panas membeku lebih cepat daripada air dingin, fenomena ini disebut efek Mpemba.",
+    "Gajah adalah satu-satunya hewan yang tidak bisa melompat.",
+    "Madu tidak pernah basi, bahkan madu dari 3000 tahun lalu masih bisa dimakan.",
+    "Cumi-cumi raksasa memiliki mata sebesar bola basket.",
+    "Buaya tidak bisa menjulurkan lidahnya.",
+    "Gunung Everest tumbuh sekitar 4 mm setiap tahun.",
+    "Di Venus, satu hari lebih panjang dari satu tahun.",
   ];
 
   int _currentIndex = 0;
-  bool _showAnswer = false;
 
-  void _randomTekaTeki() {
+  void _randomFaktaUnik() {
     setState(() {
-      _currentIndex = Random().nextInt(_tekaTeki.length);
-      _showAnswer = false;
-    });
-  }
-
-  void _showTekaTekiAnswer() {
-    setState(() {
-      _showAnswer = true;
+      _currentIndex = Random().nextInt(_faktaUnik.length);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Selamat Datang
-                Text(
-                  'Selamat Datang 👋',
-                  style: GoogleFonts.raleway(
-                    textStyle: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24),
+      backgroundColor: Colors.grey[200],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Hello 👋',
+                style: GoogleFonts.poppins(
+                  textStyle: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
                   ),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  FirebaseAuth.instance.currentUser!.email!.toString(),
-                  style: GoogleFonts.raleway(
-                    textStyle: const TextStyle(
-                        color: Colors.white70,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                FirebaseAuth.instance.currentUser?.email ?? "User",
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 18,
                   ),
                 ),
-                const SizedBox(height: 30),
+              ),
+              const SizedBox(height: 30),
 
-                // Card Teka-Teki
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        spreadRadius: 2,
-                      )
-                    ],
-                  ),
+              // Fakta Unik dalam Card
+              Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
                       Text(
-                        _tekaTeki[_currentIndex]["question"]!,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.raleway(
+                        "Fakta Unik 🔍",
+                        style: GoogleFonts.poppins(
                           textStyle: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10),
-
-                      // Tampilkan Jawaban jika ditekan
-                      if (_showAnswer)
-                        Text(
-                          _tekaTeki[_currentIndex]["answer"]!,
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        child: Text(
+                          _faktaUnik[_currentIndex],
+                          key: ValueKey<int>(_currentIndex),
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.raleway(
-                            textStyle: const TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22),
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              color: Colors.grey[800],
+                              fontSize: 16,
+                            ),
                           ),
                         ),
+                      ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+              ),
+              const SizedBox(height: 20),
 
-                // Tombol Teka-Teki
-                _buildButton(
-                  icon: FontAwesomeIcons.lightbulb,
-                  text: "Tampilkan Teka-Teki",
-                  color: Colors.orange,
-                  onPressed: _randomTekaTeki,
+              // Tombol Fakta Unik
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orangeAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  minimumSize: const Size(double.infinity, 50),
                 ),
-
-                const SizedBox(height: 10),
-
-                // Tombol Jawaban
-                _buildButton(
-                  icon: FontAwesomeIcons.eye,
-                  text: "Lihat Jawaban",
-                  color: Colors.green,
-                  onPressed: _showTekaTekiAnswer,
+                onPressed: _randomFaktaUnik,
+                child: const Text(
+                  "Tampilkan Fakta Unik 🌍",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
+              ),
+              const SizedBox(height: 30),
 
-                const SizedBox(height: 30),
-
-                // Tombol Logout
-                _logout(context),
-              ],
-            ),
+              // Tombol Logout
+              _logout(context),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildButton(
-      {required IconData icon,
-      required String text,
-      required Color color,
-      required VoidCallback onPressed}) {
-    return ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
-        minimumSize: const Size(double.infinity, 60),
-        elevation: 5,
-      ),
-      onPressed: onPressed,
-      icon: Icon(icon, color: Colors.white),
-      label: Text(
-        text,
-        style: const TextStyle(fontSize: 16, color: Colors.white),
       ),
     );
   }
 
   Widget _logout(BuildContext context) {
-    return ElevatedButton.icon(
+    return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.redAccent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),
-        minimumSize: const Size(double.infinity, 60),
-        elevation: 5,
+        minimumSize: const Size(double.infinity, 50),
       ),
       onPressed: () async {
         await AuthService().signout(context: context);
       },
-      icon: const Icon(FontAwesomeIcons.signOutAlt, color: Colors.white),
-      label: const Text(
+      child: const Text(
         "Logout",
         style: TextStyle(fontSize: 17, color: Colors.white),
       ),
